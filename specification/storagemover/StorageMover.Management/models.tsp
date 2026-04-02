@@ -177,6 +177,28 @@ union Frequency {
   Daily: "Daily",
   #suppress "@azure-tools/typespec-azure-core/documentation-required" "FIXME: Update justification, follow aka.ms/tsp/conversion-fix for details"
   Onetime: "Onetime",
+
+  /** No schedule frequency. The job definition will not run on a schedule. */
+  @added(Versions.v2026_01_01)
+  None: "None",
+}
+
+/**
+ * The time of day.
+ */
+@added(Versions.v2026_01_01)
+model SchedulerTime {
+  /**
+   * The hour element of the time. Allowed values range from 0 (start of the selected day) to 24 (end of the selected day). Hour value 24 cannot be combined with any other minute value but 0.
+   */
+  @minValue(0)
+  @maxValue(24)
+  hour?: int32;
+
+  /**
+   * The minute element of the time. Allowed values are 0 and 30. If not specified, its value defaults to 0.
+   */
+  minute?: Minute = 0;
 }
 
 /**
@@ -798,10 +820,10 @@ model JobDefinitionProperties {
 @added(Versions.v2025_12_01)
 model ScheduleInfo {
   /** Type of schedule — Monthly, Weekly, or Daily */
-  frequency: Frequency;
+  frequency?: Frequency;
 
   /** Whether the schedule is currently active */
-  isActive: boolean;
+  isActive?: boolean;
 
   /** Time of day to execute (hours and minutes) */
   executionTime?: Time;
